@@ -6,6 +6,7 @@ from typing import Any, Dict
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -42,8 +43,16 @@ class WalutomatBalanceSensor(CoordinatorEntity[WalutomatDataUpdateCoordinator], 
         self._currency = currency_data.get("currency", "UNKNOWN")
         self._attr_name = f"Walutomat Balance {self._currency}"
         self._attr_unique_id = f"walutomat_{self._currency.lower()}_balance"
-        self._attr_icon = "mdi:currency-eur"  # Generic currency icon
+        self._attr_icon = f"mdi:currency-{self._currency.lower()}"
         self._attr_native_unit_of_measurement = self._currency
+
+        # Link to the device
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
+            name=self.coordinator.config_entry.title,
+            manufacturer="Walutomat",
+            model="API v2.0.0",
+        )
 
         self._update_attributes(currency_data)
 

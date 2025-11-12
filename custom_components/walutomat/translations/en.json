@@ -29,5 +29,18 @@
                 }
             }
         }
+    },
+    "entity": {
+        "sensor": {
+            "walutomat_balance": {
+                "name": "Walutomat Balance {currency}"
+            },
+            "walutomat_buy_rate": {
+                "name": "Walutomat {pair} Buy Rate"
+            },
+            "walutomat_sell_rate": {
+                "name": "Walutomat {pair} Sell Rate"
+            }
+        }
     }
 }

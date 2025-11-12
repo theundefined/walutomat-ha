@@ -29,5 +29,18 @@
                 }
             }
         }
+    },
+    "entity": {
+        "sensor": {
+            "walutomat_balance": {
+                "name": "Saldo Walutomat {currency}"
+            },
+            "walutomat_buy_rate": {
+                "name": "Walutomat {pair} Kurs kupna"
+            },
+            "walutomat_sell_rate": {
+                "name": "Walutomat {pair} Kurs sprzedaży"
+            }
+        }
     }
 }

@@ -83,6 +83,7 @@ class WalutomatBalanceSensor(CoordinatorEntity[WalutomatBalancesCoordinator], Se
 
     _attr_state_class = SensorStateClass.TOTAL
     _attr_device_class = SensorDeviceClass.MONETARY
+    _attr_has_entity_name = True
 
     def __init__(self, coordinator: WalutomatBalancesCoordinator, idx: int) -> None:
         """Initialize the sensor."""
@@ -91,14 +92,14 @@ class WalutomatBalanceSensor(CoordinatorEntity[WalutomatBalancesCoordinator], Se
         self._balance_data = self.coordinator.data[self._idx]
         currency = self._balance_data["currency"]
 
-        self._attr_name = f"Walutomat Balance {currency}"
+        self._attr_translation_key = "walutomat_balance"
+        self._attr_translation_placeholders = {"currency": currency}
         self._attr_unique_id = f"{self.coordinator.config_entry.entry_id}_{currency}"
         self._attr_native_unit_of_measurement = currency
         self._attr_icon = CURRENCY_ICONS.get(currency, DEFAULT_CURRENCY_ICON)
 
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
-            name=f"Walutomat Account (...{self.coordinator.config_entry.data.get('api_key', '')[-4:]})",
             manufacturer="Walutomat",
             model="Account Balances",
             entry_type="service",
@@ -120,6 +121,7 @@ class WalutomatRateSensor(CoordinatorEntity[WalutomatRatesCoordinator], SensorEn
 
     _attr_device_class = SensorDeviceClass.MONETARY
     _attr_icon = "mdi:cash-multiple"
+    _attr_has_entity_name = True
 
     def __init__(
         self,
@@ -134,13 +136,16 @@ class WalutomatRateSensor(CoordinatorEntity[WalutomatRatesCoordinator], SensorEn
         self.rate_type = rate_type
         self.base_currency, self.quote_currency = pair.split("_")
 
-        self._attr_name = f"Walutomat {pair.replace('_', '/')} {rate_name}"
-        self._attr_unique_id = f"walutomat_public_{pair}_{rate_type}"
+        if rate_type == "buyRate":
+            self._attr_translation_key = "walutomat_buy_rate"
+        else:
+            self._attr_translation_key = "walutomat_sell_rate"
+        self._attr_translation_placeholders = {"pair": pair.replace("_", "/")}
+        self._attr_unique_id = f"{pair.lower()}_{rate_name.lower().replace(' ', '_')}"
         self._attr_native_unit_of_measurement = self.quote_currency
 
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, "public_rates")},
-            name="Walutomat Public Rates",
             manufacturer="Walutomat",
             model="Public Exchange Rates",
         )

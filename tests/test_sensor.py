@@ -19,6 +19,7 @@ async def test_rate_sensors(hass: HomeAssistant) -> None:
             CONF_CURRENCY_PAIRS: ["EUR_PLN", "USD_PLN"],
         },
         entry_id="test-rates",
+        title="Walutomat Public Rates",
     )
 
     with patch(
@@ -35,10 +36,18 @@ async def test_rate_sensors(hass: HomeAssistant) -> None:
         assert setup_result
         assert config_entry.state == ConfigEntryState.LOADED
 
-        eur_buy_sensor = hass.states.get("sensor.walutomat_eur_pln_buy_rate")
-        eur_sell_sensor = hass.states.get("sensor.walutomat_eur_pln_sell_rate")
-        usd_buy_sensor = hass.states.get("sensor.walutomat_usd_pln_buy_rate")
-        usd_sell_sensor = hass.states.get("sensor.walutomat_usd_pln_sell_rate")
+        eur_buy_sensor = hass.states.get(
+            "sensor.walutomat_public_rates_walutomat_eur_pln_buy_rate"
+        )
+        eur_sell_sensor = hass.states.get(
+            "sensor.walutomat_public_rates_walutomat_eur_pln_sell_rate"
+        )
+        usd_buy_sensor = hass.states.get(
+            "sensor.walutomat_public_rates_walutomat_usd_pln_buy_rate"
+        )
+        usd_sell_sensor = hass.states.get(
+            "sensor.walutomat_public_rates_walutomat_usd_pln_sell_rate"
+        )
 
         assert eur_buy_sensor is not None
         assert eur_sell_sensor is not None

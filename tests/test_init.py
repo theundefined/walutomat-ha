@@ -18,6 +18,7 @@ async def test_setup_unload_and_reload_entry(hass: HomeAssistant) -> None:
         domain=DOMAIN,
         data={CONF_API_KEY: "test-api-key"},
         entry_id="test",
+        title="Walutomat Test",
     )
 
     # Mock the API call to return some sample data
@@ -51,8 +52,8 @@ async def test_setup_unload_and_reload_entry(hass: HomeAssistant) -> None:
         assert config_entry.state == ConfigEntryState.LOADED
 
         # Check that sensors were created
-        eur_sensor = hass.states.get("sensor.walutomat_balance_eur")
-        pln_sensor = hass.states.get("sensor.walutomat_balance_pln")
+        eur_sensor = hass.states.get("sensor.walutomat_test_walutomat_balance_eur")
+        pln_sensor = hass.states.get("sensor.walutomat_test_walutomat_balance_pln")
 
         assert eur_sensor is not None
         assert pln_sensor is not None
@@ -67,5 +68,11 @@ async def test_setup_unload_and_reload_entry(hass: HomeAssistant) -> None:
 
         assert unload_result
         assert config_entry.state == ConfigEntryState.NOT_LOADED
-        assert hass.states.get("sensor.walutomat_balance_eur").state == "unavailable"
-        assert hass.states.get("sensor.walutomat_balance_pln").state == "unavailable"
+        assert (
+            hass.states.get("sensor.walutomat_test_walutomat_balance_eur").state
+            == "unavailable"
+        )
+        assert (
+            hass.states.get("sensor.walutomat_test_walutomat_balance_pln").state
+            == "unavailable"
+        )
